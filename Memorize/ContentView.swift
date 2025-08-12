@@ -5,7 +5,7 @@ struct ContentView: View {
     let carEmojis = ["🚗", "🚗", "🚙", "🚙", "🚖", "🚖", "🚓", "🚓"]
     let professionEmojis = ["👮🏻‍♂️", "👮🏻‍♂️", "👷🏿‍♂️", "👷🏿‍♂️", "🕵🏻‍♀️", "🕵🏻‍♀️", "👩🏼‍🎨", "👩🏼‍🎨"]
 
-    @State var emojis: [String] = ["👻", "🎃", "👻", "🎃", "😈", "😈", "👾", "👾"]
+    @State var emojis: [String] = []
 
     var body: some View {
         VStack {
@@ -31,24 +31,23 @@ struct ContentView: View {
                 emojis = professionEmojis.shuffled()
             default:
                 emojis = []
-                
             }
         }, label: {
             VStack {
                 Image(systemName: symbol)
                     .imageScale(.large)
+                    .font(.title)
                 Text(text)
+                    .font(.body)
             }
         })
     }
     
 
     var themeChooser: some View {
-        HStack() {
-            themeButton(text: "Festivals", cardTheme: "festivals", symbol: "american.football.professional")
-            Spacer()
+        HStack(alignment: .center, spacing: 50) {
+            themeButton(text: "Festivals", cardTheme: "festivals", symbol: "figure.socialdance")
             themeButton(text: "Cars", cardTheme: "cars", symbol: "car")
-            Spacer()
             themeButton(text: "Professions", cardTheme: "professions", symbol: "person.crop.circle")
         }
         .padding(.horizontal)
@@ -69,7 +68,7 @@ struct ContentView: View {
 
 struct CardView: View {
     let content: String
-    @State var isFaceUp = true
+    @State var isFaceUp = false
 
     var body: some View {
         ZStack {
