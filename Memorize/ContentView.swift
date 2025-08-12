@@ -1,61 +1,69 @@
 import SwiftUI
 
 struct ContentView: View {
-    let emojis = ["👻", "👾", "👽", "🎃", "😶‍🌫️", "🤖", "😈"]
+    let festivalEmojis = ["👻", "🎃", "👻", "🎃", "😈", "😈", "👾", "👾"]
+    let carEmojis = ["🚗", "🚗", "🚙", "🚙", "🚖", "🚖", "🚓", "🚓"]
+    let professionEmojis = ["👮🏻‍♂️", "👮🏻‍♂️", "👷🏿‍♂️", "👷🏿‍♂️", "🕵🏻‍♀️", "🕵🏻‍♀️", "👩🏼‍🎨", "👩🏼‍🎨"]
 
-    @State var cardCount = 4
+    @State var emojis: [String] = ["👻", "🎃", "👻", "🎃", "😈", "😈", "👾", "👾"]
 
     var body: some View {
         VStack {
+            Text("Memorize!!")
+                .font(.largeTitle)
             ScrollView{
                 cards
             }
             Spacer()
-            cardCountAdjusters
+            themeChooser
         }
         .padding()
     }
+    
+    func themeButton(text: String, cardTheme: String, symbol: String) -> some View {
+        Button(action: {
+            switch cardTheme {
+            case "festivals":
+                emojis = festivalEmojis.shuffled()
+            case "cars":
+                emojis = carEmojis.shuffled()
+            case "professions":
+                emojis = professionEmojis.shuffled()
+            default:
+                emojis = []
+                
+            }
+        }, label: {
+            VStack {
+                Image(systemName: symbol)
+                    .imageScale(.large)
+                Text(text)
+            }
+        })
+    }
+    
+
+    var themeChooser: some View {
+        HStack() {
+            themeButton(text: "Festivals", cardTheme: "festivals", symbol: "american.football.professional")
+            Spacer()
+            themeButton(text: "Cars", cardTheme: "cars", symbol: "car")
+            Spacer()
+            themeButton(text: "Professions", cardTheme: "professions", symbol: "person.crop.circle")
+        }
+        .padding(.horizontal)
+    }
 
     var cards: some View {
-        LazyVGrid(columns:  [GridItem(.adaptive(minimum: 120))]) {
-            ForEach(0..<cardCount, id: \.self) { index in
+        LazyVGrid(columns:  [GridItem(.adaptive(minimum: 80))]) {
+            ForEach(emojis.indices, id: \.self) { index in
                 CardView(content: emojis[index])
-                    .aspectRatio(contentMode: .fit)
+                    .aspectRatio(2/3, contentMode: .fit)
             }
         }
-        .foregroundStyle(.orange)
+        .foregroundStyle(.red)
     }
     
-    var cardCountAdjusters: some View {
-        HStack {
-            cardRemover
-            Spacer()
-            cardAdder
-        }
-        .imageScale(.large)
-        .font(.largeTitle)
-    }
-    
-    func cardCountAdjuster(by offset: Int, symbol: String) -> some View {
-        Button(
-            action: {
-                    cardCount += offset
-            },
-            label: {
-                Image(systemName: symbol)
-
-            }
-        )
-        .disabled(cardCount + offset < 1 || cardCount + offset > emojis.count)
-    }
-
-    var cardRemover: some View {
-        cardCountAdjuster(by: -1, symbol: "rectangle.stack.badge.minus.fill")
-    }
-
-    var cardAdder: some View {
-        cardCountAdjuster(by: 1, symbol: "rectangle.stack.badge.plus.fill")
-    }
 
 }
 
